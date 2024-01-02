@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Styled Bootstrap Calendar</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    .calendar {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      font-size: 20px;
+    }
+
+    /* Customize cell size and background colors */
+    td {
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    th {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .bg-primary {
+      background-color: #007bff !important;
+      color: white;
+    }
+
+    .bg-secondary {
+      background-color: #6c757d !important;
+      color: white;
+    }
+
+    .bg-success {
+      background-color: #28a745 !important;
+      color: white;
+    }
+
+    .bg-danger {
+      background-color: #dc3545 !important;
+      color: white;
+    }
+
+    .bg-warning {
+      background-color: #ffc107 !important;
+      color: white;
+    }
+
+    .bg-info {
+      background-color: #17a2b8 !important;
+      color: white;
+    }
+
+    .bg-light {
+      background-color: #f8f9fa !important;
+      color: black;
+    }
+
+    .bg-dark {
+      background-color: #343a40 !important;
+      color: white;
+    }
+
+    .bg-white {
+      background-color: #fff !important;
+      color: black;
+    }
+
+    /* Highlight current date */
+    .highlight-today {
+      position: relative;
+    }
+
+    .highlight-today::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      background-color: #FF6347;
+      /* Tomato color */
+      z-index: -1;
+    }
+
+.highlight-today span {
+ position: relative;
+ z-index: 1;
+ font-weight: bold;
+ border-radius: 5px;
+ color: #333 !important;
+ background: #fff;
+ padding: 10px;
+ border: 2px solid red;
+ font-size: 30px !important;
+}
+  </style>
+</head>
+
+<body>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col">
+        <table class="calendar" id="calendar">
+          <thead>
+            <tr id="dayNamesRow"></tr>
+          </thead>
+          <tbody id="calendarBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function createCalendar(year, month) {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1; // Month is 0-indexed
+
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'
+      ];
+
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      const date = new Date(year, month - 1); // Month is 0-indexed
+      const daysInMonth = new Date(year, month, 0).getDate();
+      const firstDayIndex = date.getDay();
+
+      const calendarTable = document.getElementById('calendarBody');
+      calendarTable.innerHTML = '';
+
+      const dayNamesRow = document.getElementById('dayNamesRow');
+      dayNamesRow.innerHTML = '';
+      for (let i = 0; i < 7; i++) {
+        const th = document.createElement('th');
+        th.textContent = dayNames[i];
+        dayNamesRow.appendChild(th);
+      }
+
+      let day = 1;
+
+      // Create rows and cells for days
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement('tr');
+
+        for (let j = 0; j < 7; j++) {
+          const cell = document.createElement('td');
+          if (i === 0 && j < firstDayIndex) {
+            // Fill empty cells before the start of the month
+            const textNode = document.createTextNode('');
+            cell.appendChild(textNode);
+          } else if (day > daysInMonth) {
+            break;
+          } else {
+            const textNode = document.createElement('span');
+            textNode.textContent = day;
+            cell.appendChild(textNode);
+            if (year === currentYear && month === currentMonth && day === currentDate.getDate()) {
+              cell.classList.add('highlight-today');
+            }
+
+            // Apply background colors to the dates
+            switch (day % 7) {
+              case 1:
+                cell.classList.add('bg-primary');
+                break;
+              case 2:
+                cell.classList.add('bg-secondary');
+                break;
+              case 3:
+                cell.classList.add('bg-success');
+                break;
+              case 4:
+                cell.classList.add('bg-danger');
+                break;
+              case 5:
+                cell.classList.add('bg-warning');
+                break;
+              case 6:
+                cell.classList.add('bg-info');
+                break;
+              case 0:
+                cell.classList.add('bg-dark');
+                break;
+              default:
+                cell.classList.add('bg-light');
+            }
+
+            day++;
+          }
+          row.appendChild(cell);
+        }
+        calendarTable.appendChild(row);
+      }
+    }
+
+    // Usage:
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1; // Month is 0-indexed
+
+    createCalendar(currentYear, currentMonth);
+  </script>
+</body>
+
+</html>
